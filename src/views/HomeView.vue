@@ -1,13 +1,27 @@
 <script setup lang="ts">
-// var Hand = require('pokersolver').Hand;
-import { Hand } from "pokersolver";
-var hand1 = Hand.solve(["Ad", "As", "Jc", "Th", "2d", "3c", "Kd"]);
-var hand2 = Hand.solve(["Ad", "As", "Jc", "Th", "2d", "Qs", "Qd"]);
-var winner = Hand.winners([hand1, hand2]); // hand2
+import { useRouter } from 'vue-router';
+const router = useRouter();
 
-console.log(winner);
+const playHandler = () => {
+  router.push("/game")
+}
 </script>
 
 <template>
-  <main>home</main>
+  <main class="relative">
+    <div class="">
+      <div class="font-bold text-xl mb-2 text-center">Guess the cards</div>
+      <div class="text-center">
+        <button
+          @click="playHandler"
+          class="bg-transparent cursor-pointer hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded"
+        >
+          PLAY
+        </button>
+      </div>
+    </div>
+  </main>
 </template>
+<style scoped>
+
+</style>
