@@ -1,16 +1,17 @@
 <script setup lang="ts">
-import { useRouter } from 'vue-router';
+import { useRouter } from "vue-router";
+import TheCard from "@/components/ui/TheCard.vue";
 const router = useRouter();
 
 const playHandler = () => {
-  router.push("/game")
-}
+  router.push("/game");
+};
 </script>
 
 <template>
-  <main class="relative">
-    <div class="">
-      <div class="font-bold text-xl mb-2 text-center">Guess the cards</div>
+  <!-- <TheCard class="flex items-center justify-center"> -->
+  <TheCard class="flex items-center justify-center h-full m-auto min-w-xl flex-col">
+      <div class="font-bold text-xl stext-center mb-10">Guess the cards</div>
       <div class="text-center">
         <button
           @click="playHandler"
@@ -19,9 +20,6 @@ const playHandler = () => {
           PLAY
         </button>
       </div>
-    </div>
-  </main>
+  </TheCard>
 </template>
-<style scoped>
-
-</style>
+<style scoped></style>
