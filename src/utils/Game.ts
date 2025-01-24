@@ -1,4 +1,6 @@
 import { cards, cardHands } from "@/mock/data";
+//@ts-ignore
+import { Hand } from "pokersolver";
 
 class Game {
     private numberOfCards: number = 5;
@@ -14,7 +16,7 @@ class Game {
     }
 
     // get random hand
-    getHand(): string[] {
+    private getHand(): string[] {
         const hand: string[] = [];
 
         let counter = 1;
@@ -29,7 +31,7 @@ class Game {
         return hand;
     }
 
-    getAnswers(correctAnswer: string) {
+    private getAnswers(correctAnswer: string) {
         // number of answers options without correct answer  
         const size = this.numberOfAnswers - 1;
         const randomIndexAnswerCorrect = this.randomNumber(0, size);
@@ -41,7 +43,7 @@ class Game {
         // get random answers
         let counter = 1;
         while (counter <= size) {
-            const randomHandIndex = this.randomNumber(0, this.cardHandsLength-1);
+            const randomHandIndex = this.randomNumber(0, this.cardHandsLength - 1);
             const randomIndexAnswer = this.randomNumber(0, size);
 
             // Check if is already exist answer in options and check position in array
@@ -53,6 +55,17 @@ class Game {
 
         return answers;
 
+    }
+
+    handAndAnswers() {
+        const getHand = game.getHand();
+        const handSolved = Hand.solve(getHand);
+        const getAnswers = game.getAnswers(handSolved.name);
+
+        return {
+            handSolved,
+            getAnswers,
+        };
     }
 
     randomNumber(min: number, max: number): number {

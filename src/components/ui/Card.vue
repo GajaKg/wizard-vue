@@ -24,7 +24,6 @@ const props = defineProps<Props>();
   padding: 1.8rem;
   border: 2px solid #c3c6ce;
   transition: 0.5s ease-out;
-  cursor: pointer;
 }
 
 .card-details {
