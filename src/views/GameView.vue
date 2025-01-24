@@ -6,16 +6,18 @@ import Box from "@/components/ui/Box.vue";
 import Card from "@/components/ui/Card.vue";
 import Answer from "@/components/Answer.vue";
 
+import type { Joke } from "@/models/Joke.interface";
+import { jokeService } from "@/services/Joke.service";
 import { useTimer } from "@/composables/timer";
-
 import { useGameStore } from "@/stores/game";
 
 //@ts-ignore
 import { Hand } from "pokersolver";
 import { game } from "@/utils/Engine";
+import JokeShow from "@/components/JokeShow.vue";
 
 const gameStore = useGameStore();
-const timer = useTimer(15);
+const timer = useTimer();
 
 const { handSolved, getAnswers } = game.handAndAnswers();
 
@@ -23,9 +25,16 @@ const hand = ref<Hand>(handSolved);
 const answers = ref<string[]>(getAnswers);
 const isDirty = ref<boolean>(false);
 const score = ref<number>(0);
+const suddenDeath = ref<number>(10);
 const isCorrectAnswer = ref<boolean>();
+const joke = ref<Joke>();
 
 const onAnswerSelected = (answer: string): void => {
+  if (timer.gameOver.value) return;
+
+  joke.value = undefined;
+  loadJoke();
+
   isDirty.value = true;
 
   if (hand.value.name === answer) {
@@ -38,16 +47,27 @@ const onAnswerSelected = (answer: string): void => {
   timer.updateTime(isCorrectAnswer.value);
 
   // dont display new cards if times up
-  if (timer.gameOver.value) return;
+  if (timer.gameOver.value) {
+    joke.value = undefined;
+    return;
+  }
 
   const { handSolved, getAnswers } = game.handAndAnswers();
   hand.value = handSolved;
   answers.value = getAnswers;
 };
 
+const loadJoke = async () => {
+  const newJoke = await jokeService.getJoke();
+  joke.value = newJoke;
+};
+
 // when time ups add score to store
 watch(timer.gameOver, (isOver) => {
-  if (isOver) gameStore.addScore(score.value);
+  if (isOver) {
+    gameStore.addScore(score.value);
+    joke.value = undefined;
+  }
 });
 </script>
 
@@ -56,7 +76,7 @@ watch(timer.gameOver, (isOver) => {
     <div>
       <div
         class="mb-10 order-1 text-5xl font-extrabold leading-none text-blue-800 dark:text-blue-800 text-right"
-        :class="timer.counter.value < 10 ? 'text-red-800 dark:text-red-800' : ''"
+        :class="timer.counter.value < suddenDeath ? 'text-red-800 dark:text-red-800' : ''"
       >
         {{ timer.counter }}
       </div>
@@ -68,7 +88,9 @@ watch(timer.gameOver, (isOver) => {
       <div class="text-center mt-20">
         <div
           class="font-bold h-5"
-          :class="isCorrectAnswer && !timer.gameOver.value ? 'text-green-800' : 'text-red-800'"
+          :class="
+            isCorrectAnswer && !timer.gameOver.value ? 'text-green-800' : 'text-red-800'
+          "
         >
           <template v-if="isDirty && !timer.gameOver.value">
             {{
@@ -100,6 +122,16 @@ watch(timer.gameOver, (isOver) => {
           >
             {{ answer }}
           </Answer>
+        </div>
+
+        <JokeShow
+          v-if="joke"
+          :setup="joke?.setup"
+          :punchline="joke?.punchline"
+          class="mt-6"
+        />
+        <div v-if="!joke && isDirty && !timer.gameOver.value" class="mt-6">
+          ...loading
         </div>
       </div>
     </div>
