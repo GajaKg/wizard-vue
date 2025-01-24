@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { RouterLink, RouterView } from "vue-router";
-import TheCard from "@/components/ui/TheCard.vue";
+import TheCard from "@/components/ui/Box.vue";
 </script>
 
 <template>
