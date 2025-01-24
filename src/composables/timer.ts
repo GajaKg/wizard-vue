@@ -25,7 +25,7 @@ export function useTimer(startFrom: number = 100, step: number = 5) {
 
     const resetTimer = (): void => {
         clearInterval(interval);
-        counter.value = 100;
+        counter.value = 0;
         gameOver.value = true;
     }
 
