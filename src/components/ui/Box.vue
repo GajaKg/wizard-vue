@@ -1,13 +1,5 @@
-<script setup lang="ts"></script>
-
 <template>
-  <div class="max-w-sm rounded overflow-hidden shadow-lg p-4">
+  <div class="m-auto w-full max-w-sm md:max-w-xl rounded shadow-xl p-4 overflow-auto">
     <slot></slot>
   </div>
 </template>
-<style lang="css" scoped>
-.the-card {
-  margin: auto;
-  min-height: 90vh;
-}
-</style>

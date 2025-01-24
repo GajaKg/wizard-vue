@@ -1,10 +1,11 @@
 <script setup lang="ts">
-import { ref, watch } from "vue";
+import { ref, watch, defineAsyncComponent, h } from "vue";
 import { RouterLink } from "vue-router";
 
 import Box from "@/components/ui/Box.vue";
 import Card from "@/components/ui/Card.vue";
 import Answer from "@/components/Answer.vue";
+const JokeShow = defineAsyncComponent(() => import("@/components/JokeShow.vue"));
 
 import type { Joke } from "@/models/Joke.interface";
 import { jokeService } from "@/services/Joke.service";
@@ -14,7 +15,6 @@ import { useGameStore } from "@/stores/game";
 //@ts-ignore
 import { Hand } from "pokersolver";
 import { game } from "@/utils/Engine";
-import JokeShow from "@/components/JokeShow.vue";
 
 const gameStore = useGameStore();
 const timer = useTimer();
@@ -72,7 +72,7 @@ watch(timer.gameOver, (isOver) => {
 </script>
 
 <template>
-  <Box class="h-full m-auto min-w-xl border-2">
+  <Box style="height: 80vh">
     <div>
       <div
         class="mb-10 order-1 text-5xl font-extrabold leading-none text-blue-800 dark:text-blue-800 text-right"
@@ -80,12 +80,12 @@ watch(timer.gameOver, (isOver) => {
       >
         {{ timer.counter }}
       </div>
-      <div class="flex gap-3 justify-center">
+      <div class="flex flex-wrap gap-3 justify-center">
         <Card v-for="(card, index) in hand.cards" :card-type="card.suit" :key="index">
           {{ card.value }}
         </Card>
       </div>
-      <div class="text-center mt-20">
+      <div class="text-center mt-5 md:mt-20">
         <div
           class="font-bold h-5"
           :class="

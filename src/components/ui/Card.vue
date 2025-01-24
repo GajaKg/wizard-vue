@@ -1,42 +1,26 @@
 <script setup lang="ts">
+import { computed } from 'vue';
+
 interface Props {
   cardType: "s" | "h" | "d" | "c";
 }
-
 const props = defineProps<Props>();
+
+const typesCard = {
+  "s": "spades.png",
+  "h": "hearts.png",
+  "d": "diamond.png",
+  "c": "clubs.png",
+}
+
+const typeImg = computed(() =>`src/assets/icons/${typesCard[props.cardType]}`);
 </script>
 
 <template>
-  <div class="card">
-    <div class="card-type">{{ cardType }}</div>
-    <div class="card-details">
+  <div class="relative w-24 h-32 md:h-42 border rounded-lg border-gray-500 bg-gray-50">
+    <div class="absolute top-2 right-4 w-5"><img :src="typeImg" class="w-full h-auto" /></div>
+    <div class="grid h-full justify-center content-center">
       <p class="text-2xl"><slot></slot></p>
     </div>
   </div>
 </template>
-<style lang="css" scoped>
-.card {
-  width: 90px;
-  height: 150px;
-  border-radius: 20px;
-  background: #f5f5f5;
-  position: relative;
-  padding: 1.8rem;
-  border: 2px solid #c3c6ce;
-  transition: 0.5s ease-out;
-}
-
-.card-details {
-  color: black;
-  height: 100%;
-  gap: 0.5em;
-  display: grid;
-  place-content: center;
-}
-
-.card-type {
-  position: absolute;
-  top: 7px;
-  right: 10px;
-}
-</style>

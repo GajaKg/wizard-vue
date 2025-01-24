@@ -10,7 +10,7 @@ const playHandler = () => {
 
 <template>
   <!-- <TheCard class="flex items-center justify-center"> -->
-  <Box class="flex items-center justify-center h-full m-auto min-w-xl flex-col">
+  <Box class="flex items-center justify-center flex-col" style="height: 80vh;">
     <div class="font-bold text-xl stext-center mb-10">Guess the cards</div>
     <div class="text-center">
       <button

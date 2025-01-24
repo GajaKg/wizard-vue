@@ -26,7 +26,7 @@ const toggleLeaderboard = (show: boolean) => {
 </script>
 
 <template>
-  <Box class="flex items-center justify-center h-full m-auto min-w-xl flex-col relative">
+  <Box class="flex items-center justify-center flex-col" style="height: 80vh;">
     <div class="flex mb-6">
       <button
         @click="toggleLeaderboard(true)"
@@ -52,17 +52,6 @@ const toggleLeaderboard = (show: boolean) => {
       </li>
     </ul>
     <p v-else>No attempts</p>
-
-    <!-- <h2 class="mt-6 mb-2 text-2xl font-semibold">Best of:</h2>
-    <ul
-      v-if="leaderboard.length"
-      class="max-w-md text-xl space-y-1 text-green-900 list-disc list-inside dark:text-green-900"
-    >
-      <li v-for="(attempt, index) in bestOf" :key="index">
-        Attempt {{ attempt.counter }} -
-        <span>{{ attempt.score }} {{ attempt.score <= 1 ? "answer" : "answers" }}</span>
-      </li>
-    </ul> -->
 
     <RouterLink to="/" class="block mt-10 text-blue-400"> New Game </RouterLink>
   </Box>
