@@ -30,7 +30,7 @@ const isCorrectAnswer = ref<boolean>();
 const joke = ref<Joke>();
 
 const onAnswerSelected = (answer: string): void => {
-  if (timer.gameOver.value) return;
+  if (timer.timesUp.value) return;
 
   joke.value = undefined;
   loadJoke();
@@ -47,7 +47,7 @@ const onAnswerSelected = (answer: string): void => {
   timer.updateTime(isCorrectAnswer.value);
 
   // dont display new cards if times up
-  if (timer.gameOver.value) {
+  if (timer.timesUp.value) {
     joke.value = undefined;
     return;
   }
@@ -63,7 +63,7 @@ const loadJoke = async () => {
 };
 
 // when time ups add score to store
-watch(timer.gameOver, (isOver) => {
+watch(timer.timesUp, (isOver) => {
   if (isOver) {
     gameStore.addScore(score.value);
     joke.value = undefined;
@@ -89,20 +89,20 @@ watch(timer.gameOver, (isOver) => {
         <div
           class="font-bold h-5"
           :class="
-            isCorrectAnswer && !timer.gameOver.value ? 'text-green-800' : 'text-red-800'
+            isCorrectAnswer && !timer.timesUp.value ? 'text-green-800' : 'text-red-800'
           "
         >
-          <template v-if="isDirty && !timer.gameOver.value">
+          <template v-if="isDirty && !timer.timesUp.value">
             {{
               isCorrectAnswer
                 ? `Correct!! You gain ${timer.step} seconds`
                 : `Wrong! You loose ${timer.step} seconds`
             }}
           </template>
-          <template v-if="timer.gameOver.value"> Game over :( </template>
+          <template v-if="timer.timesUp.value"> Game over :( </template>
         </div>
         <div>
-          <template v-if="timer.gameOver.value">
+          <template v-if="timer.timesUp.value">
             <RouterLink to="/leaderboard" class="block mt-4 text-blue-400">
               Go to Leaderboard
             </RouterLink>
@@ -113,7 +113,7 @@ watch(timer.gameOver, (isOver) => {
         </div>
         <div
           class="mt-10 answers-list inline-block"
-          :class="timer.gameOver.value ? 'game-over' : ''"
+          :class="timer.timesUp.value ? 'game-over' : ''"
         >
           <Answer
             v-for="(answer, index) in answers"
@@ -130,7 +130,7 @@ watch(timer.gameOver, (isOver) => {
           :punchline="joke?.punchline"
           class="mt-6"
         />
-        <div v-if="!joke && isDirty && !timer.gameOver.value" class="mt-6">
+        <div v-if="!joke && isDirty && !timer.timesUp.value" class="mt-6">
           ...loading
         </div>
       </div>

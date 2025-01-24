@@ -2,7 +2,7 @@ import { ref, onUnmounted } from 'vue'
 
 export function useTimer(startFrom: number = 100, step: number = 5) {
     const counter = ref<number>(startFrom);
-    const gameOver = ref<boolean>(false);
+    const timesUp = ref<boolean>(false);
 
 
     const interval = setInterval(function () {
@@ -14,7 +14,7 @@ export function useTimer(startFrom: number = 100, step: number = 5) {
     }, 1000);
 
     const updateTime = (isCorrect: boolean): void => {
-        if (gameOver.value) return;
+        if (timesUp.value) return;
 
         if (!isCorrect && counter.value <= step) {
             resetTimer()
@@ -26,7 +26,7 @@ export function useTimer(startFrom: number = 100, step: number = 5) {
     const resetTimer = (): void => {
         clearInterval(interval);
         counter.value = 0;
-        gameOver.value = true;
+        timesUp.value = true;
     }
 
     onUnmounted(() => {
@@ -36,7 +36,7 @@ export function useTimer(startFrom: number = 100, step: number = 5) {
     return {
         counter,
         updateTime,
-        gameOver,
+        timesUp,
         step
     }
 }
