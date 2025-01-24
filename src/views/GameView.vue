@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref } from "vue";
+import { ref, watch } from "vue";
 import { RouterLink } from "vue-router";
 
 import Box from "@/components/ui/Box.vue";
@@ -8,36 +8,47 @@ import Answer from "@/components/Answer.vue";
 
 import { useTimer } from "@/composables/timer";
 
+import { useGameStore } from "@/stores/game";
+
 //@ts-ignore
 import { Hand } from "pokersolver";
-import { game } from "@/utils/Game";
+import { game } from "@/utils/Engine";
 
-const timer = useTimer();
+const gameStore = useGameStore();
+const timer = useTimer(15);
 
 const { handSolved, getAnswers } = game.handAndAnswers();
 
 const hand = ref<Hand>(handSolved);
 const answers = ref<string[]>(getAnswers);
 const isDirty = ref<boolean>(false);
-
-const isCorrect = ref<boolean>();
+const score = ref<number>(0);
+const isCorrectAnswer = ref<boolean>();
 
 const onAnswerSelected = (answer: string): void => {
   isDirty.value = true;
-  isCorrect.value = hand.value.name === answer ? true : false;
 
-  timer.updateTime(isCorrect.value);
+  if (hand.value.name === answer) {
+    isCorrectAnswer.value = true;
+    score.value++;
+  } else {
+    isCorrectAnswer.value = false;
+  }
+
+  timer.updateTime(isCorrectAnswer.value);
 
   // dont display new cards if times up
-  if (timer.gameOver.value) {
-    console.log("Game over");
-    return;
-  }
+  if (timer.gameOver.value) return;
 
   const { handSolved, getAnswers } = game.handAndAnswers();
   hand.value = handSolved;
   answers.value = getAnswers;
 };
+
+// when time ups add score to store
+watch(timer.gameOver, (isOver) => {
+  if (isOver) gameStore.addScore(score.value);
+});
 </script>
 
 <template>
@@ -45,6 +56,7 @@ const onAnswerSelected = (answer: string): void => {
     <div>
       <div
         class="mb-10 order-1 text-5xl font-extrabold leading-none text-blue-800 dark:text-blue-800 text-right"
+        :class="timer.counter.value < 10 ? 'text-red-800 dark:text-red-800' : ''"
       >
         {{ timer.counter }}
       </div>
@@ -56,11 +68,11 @@ const onAnswerSelected = (answer: string): void => {
       <div class="text-center mt-20">
         <div
           class="font-bold h-5"
-          :class="isCorrect && !timer.gameOver.value ? 'text-green-800' : 'text-red-800'"
+          :class="isCorrectAnswer && !timer.gameOver.value ? 'text-green-800' : 'text-red-800'"
         >
           <template v-if="isDirty && !timer.gameOver.value">
             {{
-              isCorrect
+              isCorrectAnswer
                 ? `Correct!! You gain ${timer.step} seconds`
                 : `Wrong! You loose ${timer.step} seconds`
             }}
