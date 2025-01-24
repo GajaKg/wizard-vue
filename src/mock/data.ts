@@ -35,3 +35,24 @@ export const cardHands: string[] = [
     'Pair',
     'High Card',
 ]
+
+// export const cardHands = new Map<number, string>([
+//     [1, 'Straight Flush'],
+//     [2, 'Royal Flush'],
+//     [3, 'Natural Royal Flush'],
+//     [4, 'Natural Royal Flush'],
+//     [5, 'Five of a Kind'],
+//     [6, 'Four of a Kind with Pair or Better'],
+//     [7, 'Four of a Kind'],
+//     [8, 'Four Wild Cards'],
+//     [9, 'Three of a Kind with Two Pair'],
+//     [10, 'Full House'],
+//     [11, 'Flush'],
+//     [12, 'Straight'],
+//     [13, 'Two Three Of a Kind'],
+//     [14, 'Three of a Kind'],
+//     [15, 'Three Pair'],
+//     [16, 'Two Pair'],
+//     [17, 'Pair'],
+//     [18, 'High Card']
+// ]);
