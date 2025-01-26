@@ -17,7 +17,7 @@ import { Hand } from "pokersolver";
 import { game } from "@/utils/Engine";
 
 const gameStore = useGameStore();
-const timer = useTimer();
+const timer = useTimer(3);
 
 const { handSolved, getAnswers } = game.handAndAnswers();
 
@@ -25,7 +25,7 @@ const hand = ref<Hand>(handSolved);
 const answers = ref<string[]>(getAnswers);
 const isDirty = ref<boolean>(false);
 const score = ref<number>(0);
-const suddenDeath = ref<number>(10);
+const suddenDeath = 10;
 const isCorrectAnswer = ref<boolean>();
 const joke = ref<Joke>();
 
@@ -33,7 +33,6 @@ const onAnswerSelected = (answer: string): void => {
   if (timer.timesUp.value) return;
 
   joke.value = undefined;
-  loadJoke();
 
   isDirty.value = true;
 
@@ -55,6 +54,7 @@ const onAnswerSelected = (answer: string): void => {
   const { handSolved, getAnswers } = game.handAndAnswers();
   hand.value = handSolved;
   answers.value = getAnswers;
+  loadJoke();
 };
 
 const loadJoke = async () => {
@@ -74,18 +74,22 @@ watch(timer.timesUp, (isOver) => {
 <template>
   <Box style="height: 80vh">
     <div>
+      <!------------- Timer ---------------->
       <div
         class="mb-10 order-1 text-5xl font-extrabold leading-none text-blue-800 dark:text-blue-800 text-right"
         :class="timer.counter.value < suddenDeath ? 'text-red-800 dark:text-red-800' : ''"
       >
         {{ timer.counter }}
       </div>
+
+      <!------------- Hand ---------------->
       <div class="flex flex-wrap gap-3 justify-center">
         <Card v-for="(card, index) in hand.cards" :card-type="card.suit" :key="index">
           {{ card.value }}
         </Card>
       </div>
       <div class="text-center mt-5 md:mt-20">
+        <!------------- Info ---------------->
         <div
           class="font-bold h-5"
           :class="
@@ -101,16 +105,20 @@ watch(timer.timesUp, (isOver) => {
           </template>
           <template v-if="timer.timesUp.value"> Game over :( </template>
         </div>
-        <div>
-          <template v-if="timer.timesUp.value">
-            <RouterLink to="/leaderboard" class="block mt-4 text-blue-400">
+
+        <!------------- Links ---------------->
+        <div v-if="timer.timesUp.value" class="mt-4">
+          <div>
+            <RouterLink to="/leaderboard" class="text-blue-400">
               Go to Leaderboard
             </RouterLink>
-            <RouterLink to="/" class="block mt-2 text-blue-400">
-              Start New Game
-            </RouterLink>
-          </template>
+          </div>
+          <div class="mt-2">
+            <RouterLink to="/" class="text-blue-400"> Start New Game </RouterLink>
+          </div>
         </div>
+
+        <!------------- Answers ---------------->
         <div
           class="mt-10 answers-list inline-block"
           :class="timer.timesUp.value ? 'game-over' : ''"
@@ -130,9 +138,7 @@ watch(timer.timesUp, (isOver) => {
           :punchline="joke?.punchline"
           class="mt-6"
         />
-        <div v-if="!joke && isDirty && !timer.timesUp.value" class="mt-6">
-          ...loading
-        </div>
+        <div v-if="!joke && isDirty && !timer.timesUp.value" class="mt-6">...loading</div>
       </div>
     </div>
   </Box>
