@@ -17,7 +17,7 @@ import { Hand } from "pokersolver";
 import { game } from "@/utils/Engine";
 
 const gameStore = useGameStore();
-const timer = useTimer(3);
+const timer = useTimer(100);
 
 const { handSolved, getAnswers } = game.handAndAnswers();
 
